@@ -1,3 +1,5 @@
+const Discord = require('discord.js');
+
 // Load environment variables into process
 const dotenv = require('dotenv');
 dotenv.config();
@@ -5,9 +7,21 @@ dotenv.config();
 // Load configuration of the bot
 const { prefix } = require('./config.json');
 
+// Read all command files and fill the collection
+const fs = require('fs');
+
+const commands = new Discord.Collection();
+const commandFiles = fs.readdirSync('./commands')
+                       .filter(file => file.endsWith('.js'));
+
+for(const file of commandFiles) {
+    const command = require(`./commands/${file}`);
+    commands.set(command.name, command);
+}
+
 // Setup client
-const Discord = require('discord.js');
 const client = new Discord.Client();
+client.commands = commands;
 
 client.once('ready', () => {
 	console.log('Donbot is online');
@@ -24,9 +38,19 @@ client.on('message', message => {
     const parameters = message.content.slice(prefix.length).trim().split(/ +/),
           commandName = parameters.shift().toLowerCase();
 
-	if (commandName === 'ping') {
-		message.channel.send('pong');
-	}
+    // When the bot doesn't have a command file for the command ignore it
+    if(!client.commands.has(commandName)) return;
+
+    const command = client.commands.get(commandName);
+
+	try {
+		command.execute(message, parameters);
+
+	} catch (error) {
+
+		message.reply('There was an error executing the command');
+        console.error(error);
+	}    
 });
 
 // Connect to discord server
