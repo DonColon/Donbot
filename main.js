@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const fs = require('fs');
 
 // Load environment variables into process
 const dotenv = require('dotenv');
@@ -7,16 +8,19 @@ dotenv.config();
 // Load configuration of the bot
 const { prefix } = require('./config.json');
 
-// Read all command files and fill the collection
-const fs = require('fs');
-
+// Read in all command files and fill the collection
 const commands = new Discord.Collection();
-const commandFiles = fs.readdirSync('./commands')
-                       .filter(file => file.endsWith('.js'));
 
-for(const file of commandFiles) {
-    const command = require(`./commands/${file}`);
-    commands.set(command.name, command);
+const commandFolders = fs.readdirSync('./commands');
+
+for(const folder of commandFolders) {
+    const commandFiles = fs.readdirSync(`./commands/${folder}`)
+                            .filter(file => file.endsWith('.js'));
+    
+    for(const file of commandFiles) {
+        const command = require(`./commands/${folder}/${file}`);
+        commands.set(command.name, command);
+    }
 }
 
 // Setup client
@@ -38,15 +42,34 @@ client.on('message', message => {
     const parameters = message.content.slice(prefix.length).trim().split(/ +/),
           commandName = parameters.shift().toLowerCase();
 
-    // When the bot doesn't have a command file for the command ignore it
-    if(!client.commands.has(commandName)) return;
+    // Get command by name or search for an alias
+    const command = client.commands.get(commandName) || client.commands.find(command => command.aliases.includes(commandName));
 
-    const command = client.commands.get(commandName);
+    // When no command was found by the name or alias ignore it
+    if(!command) return;
+
+    // Check if command was used on a server
+    if(command.serverOnly && message.channel.type === 'dm') {
+        message.reply(`This command can not be used in DMs`);
+        return;
+    }
+
+    // Check if command needs parameters and if parameters are specified
+    if(command.hasParameter && parameters.length === 0) {
+        let helpText = `You didn't specify the required parameters`;
+
+        if(command.usage) {
+            helpText += `\nThis is how you use the command: \`${prefix}${command.name} ${command.usage}\``;
+        }
+
+        message.reply(helpText);
+        return;
+    }
 
 	try {
 		command.execute(message, parameters);
 
-	} catch (error) {
+	} catch(error) {
 
 		message.reply('There was an error executing the command');
         console.error(error);
