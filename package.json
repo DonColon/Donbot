@@ -1,0 +1,33 @@
+{
+	"name": "donbot",
+	"version": "1.0.0",
+	"description": "A discord bot for the server doncolon's kingdom",
+	"keywords": [
+		"discord",
+		"bot",
+		"moderation"
+	],
+	"author": {
+		"name": "Dardan Rrafshi",
+		"email": "dardan.rrafshi@gmail.com",
+		"url": "https://github.com/DonColon"
+	},
+	"license": "Apache-2.0",
+	"homepage": "https://github.com/DonColon/Donbot#readme",
+	"bugs": {
+		"url": "https://github.com/DonColon/Donbot/issues",
+		"email": "dardan.rrafshi@gmail.com"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/DonColon/Donbot.git"
+	},
+	"main": "main.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"dependencies": {
+		"discord.js": "^12.5.3",
+		"dotenv": "^10.0.0"
+	}
+}
