@@ -1,5 +1,5 @@
 {
-	"name": "donbot",
+	"name": "donbot-discord",
 	"version": "1.0.0",
 	"description": "A discord bot for the server doncolon's kingdom",
 	"keywords": [
@@ -13,14 +13,14 @@
 		"url": "https://github.com/DonColon"
 	},
 	"license": "Apache-2.0",
-	"homepage": "https://github.com/DonColon/Donbot#readme",
+	"homepage": "https://github.com/DonColon/donbot-discord#readme",
 	"bugs": {
-		"url": "https://github.com/DonColon/Donbot/issues",
+		"url": "https://github.com/DonColon/donbot-discord/issues",
 		"email": "dardan.rrafshi@gmail.com"
 	},
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/DonColon/Donbot.git"
+		"url": "git+https://github.com/DonColon/donbot-discord.git"
 	},
 	"main": "main.js",
 	"scripts": {
