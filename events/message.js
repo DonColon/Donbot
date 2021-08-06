@@ -5,8 +5,6 @@ module.exports = {
 	name: 'message',
     once: false,
 	execute(message, client) {
-        console.log(client);
-
 		// When message starts not with the command prefix ignore it
         if(!message.content.startsWith(prefix)) return;
 
@@ -42,7 +40,7 @@ module.exports = {
         }
         
         try {
-            command.execute(message, parameters);
+            command.execute(message, parameters, client);
         
         } catch(error) {
         
